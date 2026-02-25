@@ -28,6 +28,14 @@ let bodyW = window.innerWidth;
 let bodyH = window.innerHeight;
 let clickedX = 0
 let clickedY = 0
+/**아이템용 */
+let itemsKind = {
+    gold: "Dslmnge5416d2HGdss264241d62dSg",
+    diamond: "H523SD54263d4s394fa2sd23e6f84g",
+    wood: "G6sd26s6d57h13s6d6a9fAS6ds2d66",
+    rock: "5642Hasdfsdahg2354261dHsdsfa6d",
+    iron: "Hd12sa64263SD6Hd26s64SD12g6d2s"
+}
 /**엔티티용 */
 let entityState = {
     Idle: "13245dDHhfasdfvc445d1F3",
@@ -52,9 +60,11 @@ let loadType = "";
 document.body.style.width = `${bodyW}px`;
 document.body.style.height = `${bodyH}px`;
 let EntityList = []
+let ItemList = []
 let mouseX = 0;
 let mouseY = 0;
 let count = 0;
+let countItem = 0;
 let items = {
     gold: 0,
     diamond: 0,
@@ -62,17 +72,97 @@ let items = {
     rock: 0,
     iron: 0
 }
+class Item{
+    data = {
+        itemKind: ""
+    }
+    object = null;
+    constructor(kind){
+        this.object = document.createElement("div")
+        this.object.className = "Item Layer-Object"
+        this.object.left = `${Math.random() * 100}vw`
+        this.object.top = `${Math.random() *  100}vh`
+        switch(kind){
+            case itemsKind.gold:
+                this.object.title = "Gold"
+                this.data.itemKind = itemsKind.gold;
+                this.object.style.backgroundColor = "gold"
+                break;
+            case itemsKind.diamond:
+                this.object.title = "Diamond"
+                this.data.itemKind = itemsKind.diamond;
+                this.object.style.backgroundColor = "cyan"
+                break;
+            case itemsKind.wood:
+                this.object.title = "Wood"
+                this.data.itemKind = itemsKind.wood;
+                this.object.style.backgroundColor = "brown"
+                break;
+            case itemsKind.rock:
+                this.object.title = "Rock"
+                this.data.itemKind = itemsKind.rock;
+                this.object.style.backgroundColor = "gray"
+                break;
+            case itemsKind.iron:
+                this.object.title = "Iron"
+                this.data.itemKind = itemsKind.iron;
+                this.object.style.backgroundColor = "silver"
+                break;
+        }
+        this.object.id = `Item v${countItem}`
+        this.object.addEventListener("click", () => {
+            EntityList.forEach(element => {
+                if (_distance(this.object, element.object) <= 4.5){
+                    element.data.nowState = entityState.Work;
+                    setTimeout(() => {
+                        element.data.nowState = entityState.Idle
+                        switch(this.data.itemKind){
+                            case itemsKind.gold:
+                                items.gold++
+                                this.object.remove();
+                                ItemList.splice(ItemList.indexOf(this))
+                                delete this;
+                                break;
+                            case itemsKind.diamond:
+                                items.diamond++
+                                this.object.remove();
+                                ItemList.splice(ItemList.indexOf(this))
+                                delete this;
+                                break;
+                            case itemsKind.wood:
+                                items.wood++
+                                this.object.remove();
+                                ItemList.splice(ItemList.indexOf(this))
+                                delete this;
+                                break;
+                            case itemsKind.rock:
+                                items.rock++
+                                this.object.remove();
+                                ItemList.splice(ItemList.indexOf(this))
+                                delete this;
+                                break;
+                            case itemsKind.iron:
+                                items.iron++
+                                this.object.remove();
+                                ItemList.splice(ItemList.indexOf(this))
+                                delete this;
+                                break;
+                        }
+                    }, 3000)
+                }
+            });
+        })
+        ItemList.push(this)
+        document.body.appendChild(this.object)
+        countItem++;
+    }
+}
 class Entity{
     data = {
-        /**int */
         hp: 100,
-        /**int */
         level: 0,
-        /**int */
         exp: 0,
-        /**entityState */
         nowState: entityState.Idle,
-        /**bool */
         selected: false
     }
     object = null;
@@ -82,7 +172,7 @@ class Entity{
         this.data.nowState = nowS;
         this.object = document.createElement("div");
         this.object.className = "Entity Layer-Object";
-        this.object.style.top = `${y}vw`
+        this.object.style.top = `${y}vh`
         this.object.style.left = `${x}vw`
         this.object.id = `Entity v${count}`
         this.data.hp = hp;
@@ -97,6 +187,7 @@ class Entity{
     }
     /**매 프레임 실행하시오 */
     Update() {
+        this.object.title = `${this.object.id}-${this.data.nowState}`
         if (this.data.nowState == entityState.Die){
             this.object.style.backgroundColor = 'darkred';
             return;
@@ -108,10 +199,12 @@ class Entity{
             this.data.hp = 100;
         }
         if (this.data.selected){
-            let y = Number(this.object.style.top.replace("vw",""))
-            let x = Number(this.object.style.left.replace("vw",""))
-            this.object.style.top = `${y + ((_vw(mouseY) <= y)? ((_vw(mouseY) == y)? 0:-0.1):0.1)}vw`
-            this.object.style.left = `${x + ((_vw(mouseX) <= x)? ((_vw(mouseX) == x)? 0:-0.1):0.1)}vw`
+            if (this.data.nowState != entityState.Work){
+                let y = Number(this.object.style.top.replace("vh",""))
+                let x = Number(this.object.style.left.replace("vw",""))
+                this.object.style.top = `${y + ((_vh(mouseY) <= y)? ((_vh(mouseY) == y)? 0:-0.1):0.1)}vh`
+                this.object.style.left = `${x + ((_vw(mouseX) <= x)? ((_vw(mouseX) == x)? 0:-0.1):0.1)}vw`
+            }
         }
         if (this.data.selected){
             this.data.nowState = entityState.Move
@@ -132,12 +225,12 @@ class Entity{
                 this.object.style.border = "0.25vw solid green"
                 break;
             case entityState.Work:
-                this.object.style.border = "0.25vw solid gold"
+                this.object.style.border = "0.25vw solid orange"
                 break;
         }
     }
     Select(){
-        let y = Number(this.object.style.top.replace("vw","")) + (Number(this.object.style.height.replace("vw","")) / 2)
+        let y = Number(this.object.style.top.replace("vh","")) + _vh(_vwPx(Number(this.object.style.height.replace("vw","")) / 2))
         let x = Number(this.object.style.left.replace("vw","")) + (Number(this.object.style.width.replace("vw","")) / 2)
         let isSelectX = false;
         let isSelectY = false;
@@ -146,7 +239,7 @@ class Entity{
         }else{
             isSelectX = false
         }
-        if (_vw(clickedY) < y && y < _vw(mouseY )){
+        if (_vh(clickedY) < y && y < _vh(mouseY )){
             isSelectY = true;
         }else{
             isSelectY = false
@@ -164,7 +257,7 @@ class Entity{
     }
     Save(){
         _save(`${this.object.id}-x`, this.object.style.left.replace("vw",""))
-        _save(`${this.object.id}-y`, this.object.style.top.replace("vw",""))
+        _save(`${this.object.id}-y`, this.object.style.top.replace("vh",""))
         _save(`${this.object.id}-state`, this.data.nowState)
         _save(`${this.object.id}-level`, this.data.level)
         _save(`${this.object.id}-exp`, this.data.exp)
@@ -174,6 +267,8 @@ class Entity{
 document.addEventListener("mousedown", (event) => {
     switch (event.button){
         case 0:
+            break;
+        case 2:
             EntityList.forEach(element => {
                 element.Select()
             });
@@ -185,8 +280,6 @@ document.addEventListener("mousedown", (event) => {
             Selector.style.left = `${clickedX}px`;
             Selector.style.width = `${Math.abs(event.clientX - clickedX)}px`
             Selector.style.height = `${Math.abs(event.clientY - clickedY)}px`
-            break;
-        case 2:
             break;
     }
 })
@@ -211,7 +304,7 @@ document.addEventListener("mousemove", (event) => {
     }
 })
 document.addEventListener("mouseup", (event) => {
-    if (event.button == 0 && isDrag){
+    if (event.button == 2 && isDrag){
         isDrag = false
         EntityList.forEach(element => {
             element.Select()
@@ -220,17 +313,19 @@ document.addEventListener("mouseup", (event) => {
     }
 })
 document.addEventListener("touchstart", (event) => {
-    EntityList.forEach(element => {
-        element.Select()
-    });
-    isDrag = true;
-    clickedX = event.touches[0].clientX;
-    clickedY = event.touches[0].clientY;
-    Selector.style.display = _dis(true)
-    Selector.style.top = `${clickedY}px`;
-    Selector.style.left = `${clickedX}px`;
-    Selector.style.width = `${event.touches[0].clientX - clickedX}px`
-    Selector.style.height = `${event.touches[0].clientY - clickedY}px`
+    if (event.touches.length > 1){
+        EntityList.forEach(element => {
+            element.Select()
+        });
+        isDrag = true;
+        clickedX = event.touches[0].clientX;
+        clickedY = event.touches[0].clientY;
+        Selector.style.display = _dis(true)
+        Selector.style.top = `${clickedY}px`;
+        Selector.style.left = `${clickedX}px`;
+        Selector.style.width = `${event.touches[0].clientX - clickedX}px`
+        Selector.style.height = `${event.touches[0].clientY - clickedY}px`
+    }
 })
 document.addEventListener("touchmove", (event) => {
     if (ScreenType == inGameState.TouchScreen){
@@ -279,6 +374,18 @@ function _dis(bool){
 function _vw(px){
     return (px / bodyW) * 100
 }
+/**픽셀 => 뷰포트 */
+function _vh(px){
+    return (px / bodyH) * 100
+}
+/**뷰포트  => 픽셀*/
+function _vwPx(vw){
+    return (vw / 100) * bodyW
+}
+/**뷰포트  => 픽셀*/
+function _vhPx(vh){
+    return (vh / 100) * bodyH
+}
 /**현재 언어에 따라 값 반환 */
 function _lang(en, kr){
     if (language == "en"){
@@ -292,6 +399,11 @@ function _save(name, value){
 }
 function _load(name){
     return localStorage.getItem(name)
+}
+/**vw로 리턴 */
+function _distance(obj1, obj2){
+    return Math.sqrt((Number(obj1.style.left.replace("vw","")) - Number(obj2.style.left.replace("vw","")))**2 + 
+        (vw(_vhPx(Number(obj1.style.height.replace("vh","")))) - vw(_vhPx(Number(obj2.style.height.replace("vh","")))))**2)
 }
 function Say(value, func = () => {return;}){
     talkWindow.style.display = _dis(true)
@@ -331,21 +443,21 @@ function startGame(isFirst = false){
 }
 function Tutorial(){
     Say(_lang("Welcome!", "환영합니다!"), () => {
-        Say(_lang("Let me tell you about this world.", "이 세계에 대해 알려드리겠습니다."), () => {
-            Say(_lang("First, let me explain how to move the object in front of you.", "첫 번째로, 당신의 앞에 있는 개체를 움직이는 방법에 대해 설명해드리죠."), () => {
-                Say(_lang("Select the desired object by dragging left it and click where you want to move it.","왼쪽 드래그를 통해 원하는 개체를 선택하고, 이동을 원하는 위치를 클릭하세요."), () => {
-                    Say(_lang("I'll give you a moment. Try it yourself.", "잠깐의 시간을 드리겠습니다. 직접 해보시죠"), () => {
-                        setTimeout(() =>{
-                            Say(_lang("Please note that right dragging is not possible.", "참고로 오른쪽 드래그는 불가능합니다."), () => {
-                                Say(_lang("", ""), () => {
-                                    
-                                })
-                            })
-                        },10000)
-                    })
-                })
-            })
-        })
+    Say(_lang("Let me tell you about this world.", "이 세계에 대해 알려드리겠습니다."), () => {
+    Say(_lang("First, let me explain how to move the object in front of you.", "첫 번째로, 당신의 앞에 있는 개체를 움직이는 방법에 대해 설명해드리죠."), () => {
+    Say(_lang("Select the desired object by dragging right it and click where you want to move it.","오른쪽 드래그를 통해 원하는 개체를 선택하고, 이동을 원하는 위치를 클릭하세요."), () => {
+    Say(_lang("I'll give you a moment. Try it yourself.", "잠깐의 시간을 드리겠습니다. 직접 해보시죠"), () => {
+    setTimeout(() =>{
+    Say(_lang("Please note that left dragging is not possible.", "참고로 왼쪽 드래그는 불가능합니다."), () => {
+    Say(_lang("On mobile, you need to drag with two fingers.", "모바일의 경우에는 두 손가락으로 드래그해야 합니다."), () => {
+        
+    })
+    })
+    },10000)
+    })
+    })
+    })
+    })
     })
 }
 function Save(){
