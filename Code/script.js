@@ -4,6 +4,7 @@ let talkWindow = document.getElementById("talkWindow")
 let talkBox = document.getElementById("talkBox")
 let Selector = document.getElementById("Selector")
 let language = "en"
+let isDrag = false
 let clicked;
 Selector.style.display = _dis(false)
 talkWindow.style.display = _dis(false)
@@ -41,9 +42,12 @@ let inGameState = {
     InGame: "t44h4e62121312No23r1thIn21G2a41meSt315a14teInG537am6e",
     Die: "t64heN654ort13hI1nG4a64m12eS1213144t3a13t4eD46i51e",
     LoadType_New: "tmaslfsdaf54aygD16g4d5S5F1gG5135DFD",
-    LoadType_Load: "2562136412D16gF2166SVCB2364E6A6231153"
+    LoadType_Load: "2562136412D16gF2166SVCB2364E6A6231153",
+    TouchScreen: "651564DgGHdsf61984Hd2674S6A64YT6526ahsd45191351366",
+    Mouse: "KSDoLd56246212677542SLKB46513dis5613Gjkdksne8436GDds"
 }
 let nowStateInGame = inGameState.Lobby;
+let ScreenType = inGameState.Mouse;
 let loadType = "";
 document.body.style.width = `${bodyW}px`;
 document.body.style.height = `${bodyH}px`;
@@ -167,11 +171,6 @@ class Entity{
         _save(`${this.object.id}-hp`, this.data.hp)
     }
 }
-document.addEventListener("mousemove", (event) => {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-})
-let isDrag = false
 document.addEventListener("mousedown", (event) => {
     switch (event.button){
         case 0:
@@ -195,13 +194,17 @@ document.addEventListener("click", () => {
     document.documentElement.requestFullscreen();
 })
 document.addEventListener("mousemove", (event) => {
+    if (ScreenType == inGameState.Mouse){
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }
     if (isDrag){
         Selector.style.display = _dis(true)
         Selector.style.top = `${clickedY}px`;
         Selector.style.left = `${clickedX}px`;
         Selector.style.width = `${Math.abs(event.clientX - clickedX)}px`
         Selector.style.height = `${Math.abs(event.clientY - clickedY)}px`
-        if (event.clientX <clickedX || event.clientY < clickedY){
+        if (event.clientX < clickedX || event.clientY < clickedY){
             Selector.style.width = "0px"
             Selector.style.height = "0px"
         }
@@ -230,6 +233,10 @@ document.addEventListener("touchstart", (event) => {
     Selector.style.height = `${event/*.touches[0]*/.clientY - clickedY}px`
 })
 document.addEventListener("touchmove", (event) => {
+    if (ScreenType == inGameState.TouchScreen){
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }
     if (isDrag){
         Selector.style.display = _dis(true)
         Selector.style.top = `${clickedY}px`;
@@ -367,6 +374,10 @@ function languageChange(value){
 }
 /**매 프레임마다 실행 */
 function update(){
+    if (window.ontouchstart && ScreenType == inGameState.Mouse){
+        ScreenType = inGameState.TouchScreen
+        alert(_lang("Change to touch mode.", "터치 모드로 변경합니다."))
+    }
     EntityList.forEach(entity => {
         entity.Update();
     });
