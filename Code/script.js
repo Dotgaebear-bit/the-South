@@ -249,9 +249,11 @@ document.addEventListener("touchmove", (event) => {
         }
     }
 })
-document.addEventListener("touchend", () => {
+document.addEventListener("touchend", (event) => {
     if (isDrag){
         isDrag = false
+        mouseX = event.touches[0].clientX;
+        mouseY = event.touches[0].clientY;
         EntityList.forEach(element => {
             element.Select()
         });
@@ -374,10 +376,10 @@ function languageChange(value){
 }
 /**매 프레임마다 실행 */
 function update(){
-    if (window.ontouchstart || window.ontouchmove || window.ontouchcancel || window.ontouchend){
-        alert("Change Mode")
+    if ((window.ontouchstart || window.ontouchmove || window.ontouchcancel || window.ontouchend) && ScreenType == inGameState.Mouse){
         ScreenType = inGameState.TouchScreen
     }else{
+        if (ScreenType == inGameState.TouchScreen)
         ScreenType = inGameState.Mouse
     }
     EntityList.forEach(entity => {
