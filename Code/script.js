@@ -221,21 +221,21 @@ document.addEventListener("touchstart", (event) => {
         element.Select()
     });
     isDrag = true;
-    clickedX = event.touches[0].clientX;
-    clickedY = event.touches[0].clientY;
+    clickedX = event/*.touches[0]*/.clientX;
+    clickedY = event/*.touches[0]*/.clientY;
     Selector.style.display = _dis(true)
     Selector.style.top = `${clickedY}px`;
     Selector.style.left = `${clickedX}px`;
-    Selector.style.width = `${Math.abs(event.touches[0].clientX - clickedX)}px`
-    Selector.style.height = `${Math.abs(event.touches[0].clientY - clickedY)}px`
+    Selector.style.width = `${event/*.touches[0]*/.clientX - clickedX}px`
+    Selector.style.height = `${event/*.touches[0]*/.clientY - clickedY}px`
 })
 document.addEventListener("touchmove", (event) => {
     if (isDrag){
         Selector.style.display = _dis(true)
         Selector.style.top = `${clickedY}px`;
         Selector.style.left = `${clickedX}px`;
-        Selector.style.width = `${event.touches[0].clientX - clickedX}px`
-        Selector.style.height = `${event.touches[0].clientY - clickedY}px`
+        Selector.style.width = `${event/*.touches[0]*/.clientX - clickedX}px`
+        Selector.style.height = `${event/*.touches[0]*/.clientY - clickedY}px`
         if (event.clientX <clickedX || event.clientY < clickedY){
             Selector.style.width = "0px"
             Selector.style.height = "0px"
