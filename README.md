@@ -1,22 +1,22 @@
-안녕하십니까! Dotgaebear-bit입니다!
-먼저, 이 게임은 현재 개발 중으로, 오직 Github에서만 플레이하실 수 있습니다.
-itch.io에는 완성 이후 출시할 예정이니 많은 관심 부탁드립니다!
-
+안녕하십니까! Dotgaebear-bit입니다!<br>
+먼저, 이 게임은 현재 개발 중으로, 오직 Github에서만 플레이하실 수 있습니다.<br>
+itch.io에는 완성 이후 출시할 예정이니 많은 관심 부탁드립니다!<br>
+<br>
 플레이 링크:
   https://dotgaebear-bit.github.io/the-South/
-
-<The North's panda> Come back!
-오래 기다리셨습니다.
-
-오류가 너무 많은 탓에 개발을 중지 시켰던 <The North's panda>.
-
-리메이크로 돌아왔습니다!
-    *일부 기능이 삭제되거나 추가될 수 있으므로 양해 부탁드립니다.
-
-<The South>는 <The North's panda>와 같은 플레이 방식을 공유하는 게임입니다.
-
+<br>
+<The North's panda> Come back!<br>
+오래 기다리셨습니다.<br>
+<br>
+오류가 너무 많은 탓에 개발을 중지 시켰던 <The North's panda>.<br>
+<br>
+리메이크로 돌아왔습니다!<br>
+    *일부 기능이 삭제되거나 추가될 수 있으므로 양해 부탁드립니다.<br>
+<br>
+<The South>는 <The North's panda>와 같은 플레이 방식을 공유하는 게임입니다.<br>
+<br>
 하지만 더욱 좋은 경험을 위해 UI와 기능을 대폭 수정했습니다.<br>
-
+<br>
  세이브 기능<br>
 이제부터는 자동적으로 게임 진행 상태가 세이브 되어, 게임 로드를 통해 이어 할 수 있습니다.<br><br>
  개체 선택 방식 수정<br>
