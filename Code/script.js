@@ -234,8 +234,8 @@ document.addEventListener("touchstart", (event) => {
 })
 document.addEventListener("touchmove", (event) => {
     if (ScreenType == inGameState.TouchScreen){
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        mouseX = event.touches[0].clientX;
+        mouseY = event.touches[0].clientY;
     }
     if (isDrag){
         Selector.style.display = _dis(true)
@@ -249,7 +249,7 @@ document.addEventListener("touchmove", (event) => {
         }
     }
 })
-document.addEventListener("touchend", () => {
+document.addEventListener("touchcancel", () => {
     if (isDrag){
         isDrag = false
         EntityList.forEach(element => {
