@@ -185,6 +185,11 @@ class Item{
                 }
             });
         })
+        if (_distance(this.object, roulette) < _vhPx(16)){
+            this.object.remove()
+            delete this;
+            return;
+        }
         ItemList.push(this)
         document.body.appendChild(this.object)
         countItem++;
@@ -232,11 +237,6 @@ class Entity{
                 stateObject = null;
             }
         })
-        if (_distance(this.object, roulette) < _vhPx(16)){
-            this.object.remove()
-            delete this;
-            return;
-        }
         EntityList.push(this)
         document.body.appendChild(this.object)
         count++;
@@ -567,7 +567,13 @@ function Tutorial(){
     Say(_lang("Haha, are you curious about the square on the black ground?", "하하, 검은 땅 위에 있는 사각형이 궁금하신가요?"), () => {
     Say(_lang("It's probably a natural resource.", "그건 아마도 천연자원일 겁니다."), () => {
     Say(_lang("Could you please bring it to me?", "혹시 그것을 가져와 주실 수 있나요?"), () => {
+    setTimeout(() => {
+    Say(_lang("Okay! The UI in the upper left corner will display the natural resources you've collected.","좋아요! 좌측 상단의 UI에 당신이 모은 천연자원이 표시됩니다."), () => {
+    Say(_lang("You can also see the state of an object by hovering your cursor over it.","또한 개체에 커서를 가져가면 개체의 상태를 볼 수 있습니다."), () => {
     
+    })
+    })
+    }, 10000);
     })
     })
     })
