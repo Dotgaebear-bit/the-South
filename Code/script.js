@@ -185,7 +185,7 @@ class Item{
                 }
             });
         })
-        if (_distance(this.object, roulette) < _vhPx(16)){
+        if (_distance(this.object, roulette) < _vw(_vhPx(16))){
             this.object.remove()
             delete this;
             return;
@@ -247,24 +247,6 @@ class Entity{
             this.data.exp -= 100
             this.data.level++
             this.data.power +=0.2
-        }
-        let nowStateTXT = "";
-        switch (this.data.nowState){
-            case entityState.Attack:
-                nowStateTXT = "Attack";
-                break;
-            case entityState.Die:
-                nowStateTXT = "Died";
-                break;
-            case entityState.Idle:
-                nowStateTXT = "Idle";
-                break;
-            case entityState.Move:
-                nowStateTXT = "Move";
-                break;
-            case entityState.Work:
-                nowStateTXT = "Work";
-                break;
         }
         if (this.data.nowState == entityState.Die){
             this.object.style.backgroundColor = 'darkred';
@@ -366,10 +348,8 @@ document.addEventListener("click", () => {
     document.documentElement.requestFullscreen();
 })
 document.addEventListener("mousemove", (event) => {
-    if (ScreenType == inGameState.Mouse){
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-    }
+    mouseX = event.clientX;
+    mouseY = event.clientY;
     if (isDrag){
         Selector.style.display = _dis(true)
         Selector.style.top = `${clickedY}px`;
@@ -407,10 +387,6 @@ document.addEventListener("touchstart", (event) => {
     }
 })
 document.addEventListener("touchmove", (event) => {
-    if (ScreenType == inGameState.TouchScreen){
-        mouseX = event.touches[0].clientX;
-        mouseY = event.touches[0].clientY;
-    }
     if (isDrag){
         Selector.style.display = _dis(true)
         Selector.style.top = `${clickedY}px`;
@@ -502,6 +478,7 @@ function Say(value, func = () => {return;}){
     })
 }
 function startGame(isFirst = false){
+    ItemList = [];
     itemWindow.style.display = _dis(true);
     roulette.style.display = _dis(true);
     lobby.style.display = _dis(false);
@@ -526,7 +503,7 @@ function startGame(isFirst = false){
         items.rock = _load("rock")
         items.iron = _load("iron")
     }
-    createItem()
+    createItem();
     setInterval(() => {
         Save()
     }, 100);
@@ -562,7 +539,7 @@ function Tutorial(){
     Say(_lang("Select the desired object by dragging right it and click where you want to move it.","오른쪽 드래그를 통해 원하는 개체를 선택하고, 이동을 원하는 위치를 클릭하세요."), () => {
     Say(_lang("On mobile, you need to drag with two fingers.", "모바일의 경우에는 두 손가락으로 드래그해야 합니다."), () => {
     Say(_lang("I'll give you a moment. Try it yourself.", "잠깐의 시간을 드리겠습니다. 직접 해보시죠"), () => {
-    setTimeout(() =>{
+    setTimeout(() => {
     Say(_lang("Please note that left dragging is not possible.", "참고로 왼쪽 드래그는 불가능합니다."), () => {
     Say(_lang("Haha, are you curious about the square on the black ground?", "하하, 검은 땅 위에 있는 사각형이 궁금하신가요?"), () => {
     Say(_lang("It's probably a natural resource.", "그건 아마도 천연자원일 겁니다."), () => {
@@ -578,7 +555,7 @@ function Tutorial(){
     })
     })
     })
-    },10000)
+    }, 10000)
     })
     })
     })
@@ -624,7 +601,7 @@ function update(){
             mouseX - 10 - _vwPx(Number(entityDataUI.main.style.width.replace("vw",""))) : 
             mouseX + 10}px`
         entityDataUI.name.innerHTML = _lang(`<strong>Name:${stateObject.object.id}</strong>`, `<strong>이름:${stateObject.object.id}</strong>`)
-        entityDataUI.hp.innerHTML = _lang(`<strong>HP:${stateObject.data.hp}</strong>`, `<strong>생명력:${stateObject.data.hp}</strong>`)
+        entityDataUI.hp.innerHTML = _lang(`<strong>HP:${Math.floor(stateObject.data.hp / 20)}</strong>`, `<strong>생명력:${Math.floor(stateObject.data.hp / 20)}</strong>`)
         entityDataUI.level.innerHTML = _lang(`<strong>Level:${stateObject.data.level}</strong>`, `<strong>등급:${stateObject.data.level}</strong>`)
         entityDataUI.exp.innerHTML = _lang(`<strong>EXP:${stateObject.data.exp}</strong>`, `<strong>경험:${stateObject.data.exp}</strong>`)
         entityDataUI.power.innerHTML = _lang(`<strong>Power:${stateObject.data.power}</strong>`, `<strong>힘:${stateObject.data.power}</strong>`)
@@ -656,7 +633,7 @@ function update(){
     itemsUI.rock.innerHTML = `<strong>${_lang("rock", "석재")}:${items.rock}</strong>`
     itemsUI.iron.innerHTML = `<strong>${_lang("iron", "금속")}:${items.iron}</strong>`
     EntityList.forEach(element1 => {
-        element1.object.innerHTML = `<strong>${element1.data.level}</strong>`
+        element1.object.innerHTML = `<strong>${Math.floor(element1.data.hp / 20)}</strong>`
         EntityList.forEach(element2 => {
             if (_distance(element1.object, element2.object) < 2 && element1 != element2){
                 if (Number(element1.object.style.left.replace("vw","")) - Number(element2.object.style.left.replace("vw","")) < 0){
@@ -672,12 +649,6 @@ function update(){
             }
         });
     });
-    if ((window.ontouchstart || window.ontouchmove || window.ontouchcancel || window.ontouchend) && ScreenType == inGameState.Mouse){
-        ScreenType = inGameState.TouchScreen
-    }else{
-        if (ScreenType == inGameState.TouchScreen)
-        ScreenType = inGameState.Mouse
-    }
     EntityList.forEach(entity => {
         entity.Update();
     });
